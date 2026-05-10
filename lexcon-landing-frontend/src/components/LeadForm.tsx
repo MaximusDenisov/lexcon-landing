@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+// const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+
 export function LeadForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -34,7 +36,7 @@ export function LeadForm() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/leads",
+        `http://178.205.131.28:8080/api/leads`,
         {
           method: "POST",
           headers: {

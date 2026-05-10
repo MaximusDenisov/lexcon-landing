@@ -3,6 +3,7 @@ package ru.lexcon.landing.service
 import org.slf4j.LoggerFactory
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import ru.lexcon.landing.config.EmailProperties
 import ru.lexcon.landing.dto.LeadRequest
@@ -14,11 +15,13 @@ class EmailNotificationService(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @Async
     fun sendLeadNotification(request: LeadRequest) {
         try {
             val message = SimpleMailMessage().apply {
                 setTo(*emailProperties.recipients.toTypedArray())
                 subject = "📩 Новая заявка с сайта"
+
                 val emailLine = request.email
                     ?.takeIf { it.isNotBlank() }
                     ?.let { "\n                    ✉️ Email: $it" }

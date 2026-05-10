@@ -13,7 +13,11 @@ class CorsConfig {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry.addMapping("/api/**")
-                    .allowedOrigins("http://localhost:3000")
+                    .allowedOrigins(
+                        "http://localhost:3000",
+                        "http://192.168.1.9:3000",
+                        "http://178.205.131.28:3434"
+                    )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
             }
