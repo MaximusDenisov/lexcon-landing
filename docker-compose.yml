@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: lexcon-landing-postgres
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_DB: lexcon_landing
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d lexcon_landing"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./lexcon-landing-backend
+    container_name: lexcon-landing-backend
+    env_file:
+      - .env.docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: lexcon-landing-frontend
+    container_name: lexcon-landing-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
